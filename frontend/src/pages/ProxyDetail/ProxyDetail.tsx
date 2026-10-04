@@ -16,6 +16,7 @@ import {
 } from 'chart.js';
 import { ConnectedIpInfo } from '../../api';
 import FlagIcon from '../../components/FlagIcon';
+import VlessStatus from '../../components/VlessStatus';
 import { useProxyDetail } from '../../hooks/useProxyDetail';
 import { buildChartOptions, buildChartData } from '../../utils/chart';
 import s from './ProxyDetail.module.scss';
@@ -68,6 +69,12 @@ export default function ProxyDetail() {
             <div className={s.statItem}><div className={s.statValue}>{stats.networkTx}</div><div className={s.statLabel}>Исход</div></div>
             <div className={s.statItem}><div className={s.statValue}>{stats.uptime}</div><div className={s.statLabel}>Аптайм</div></div>
             <div className={s.statItem}><div className={s.statValue}>{stats.connectedIps?.length || 0}</div><div className={s.statLabel}>IP</div></div>
+            {stats.vpnStatus && stats.vpnStatus.state !== 'disabled' && (
+              <div className={s.statItem}>
+                <div className={s.statValue}><VlessStatus status={stats.vpnStatus} /></div>
+                <div className={s.statLabel}>VLESS</div>
+              </div>
+            )}
           </div>
 
           {stats.connectedIps && stats.connectedIps.length > 0 && (

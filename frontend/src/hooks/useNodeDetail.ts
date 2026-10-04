@@ -78,6 +78,11 @@ export function useNodeDetail() {
       .finally(() => setBlacklistLoading(false));
   }, [loadData]);
 
+  useEffect(() => {
+    const timer = window.setInterval(() => { void loadData(); }, 30_000);
+    return () => window.clearInterval(timer);
+  }, [loadData]);
+
   const handleDelete = async (proxyId: string) => {
     if (!confirm('Удалить этот прокси?')) return;
     try {

@@ -44,6 +44,8 @@ export function useProxies() {
 
   useEffect(() => {
     loadData();
+    const timer = window.setInterval(() => { void loadData(); }, 30_000);
+    return () => window.clearInterval(timer);
   }, [loadData]);
 
   const handleDelete = async (nodeId: number, proxyId: string) => {

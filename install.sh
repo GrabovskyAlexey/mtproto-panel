@@ -354,15 +354,18 @@ fi
 export COMPOSE_PROJECT_NAME=mtproto-panel
 
 echo -e "${CYAN}Загрузка образов из реестра...${NC}"
-if docker compose pull 2>/dev/null; then
+if docker compose pull; then
     echo -e "${GREEN}  Образы успешно загружены.${NC}"
 else
     echo -e "${YELLOW}  Не удалось загрузить образы из реестра, собираем локально...${NC}"
-    BUILDX_NO_DEFAULT_ATTESTATIONS=1 DOCKER_BUILDKIT=1 docker compose build
+    if ! BUILDX_NO_DEFAULT_ATTESTATIONS=1 DOCKER_BUILDKIT=1 docker compose build; then
+        echo -e "${RED}Ошибка сборки образов.${NC}"
+        exit 1
+    fi
 fi
 
 echo -e "${CYAN}Запуск панели...${NC}"
-docker compose up -d
+docker compose up -d --no-build --pull never
 
 if [ $? -ne 0 ]; then
     echo -e "${RED}Ошибка при запуске контейнеров.${NC}"

@@ -27,7 +27,7 @@ services:
     build:
       context: ./backend
       provenance: false
-    image: ghcr.io/danielvnru/mtproto-panel-backend:latest
+    image: ghcr.io/grabovskyalexey/mtproto-panel-backend:latest
     container_name: mtproto-panel-backend
     restart: unless-stopped
     logging:
@@ -56,7 +56,7 @@ services:
     build:
       context: ./frontend
       provenance: false
-    image: ghcr.io/danielvnru/mtproto-panel-frontend:latest
+    image: ghcr.io/grabovskyalexey/mtproto-panel-frontend:latest
     container_name: mtproto-panel-frontend
     restart: unless-stopped
     logging:
