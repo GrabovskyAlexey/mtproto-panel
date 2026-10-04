@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, Button, Label, DropdownMenu } from '@gravity-ui/uikit';
 import { pauseProxy, unpauseProxy, ProxyData } from '../api';
 import { formatBytes } from '../utils/format';
+import VlessStatus from './VlessStatus';
 import s from './ProxyCard.module.scss';
 
 interface Props {
@@ -86,6 +87,12 @@ export default function ProxyCard({ proxy, nodeId, nodeName, copied, onEdit, onD
         <span className={s.label}>Домен</span>
         <span>{proxy.domain}</span>
       </div>
+      {(proxy.vpnSubscription || proxy.vpnContainerName || (proxy.vpnStatus && proxy.vpnStatus.state !== 'disabled')) && (
+        <div className={s.field}>
+          <span className={s.label}>VLESS</span>
+          <VlessStatus status={proxy.vpnStatus} />
+        </div>
+      )}
       <div className={s.field}>
         <span className={s.label}>Трафик ↑</span>
         <span>{formatBytes(proxy.trafficUp || 0)}</span>

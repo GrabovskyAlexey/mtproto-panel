@@ -154,6 +154,12 @@ export interface ConnectedIpInfo {
   countryCode?: string;
 }
 
+export interface VpnStatusData {
+  state: 'disabled' | 'connected' | 'disconnected' | 'stopped' | 'unknown';
+  checkedAt: string | null;
+  latencyMs?: number;
+}
+
 export interface ProxyData {
   id: string;
   name: string;
@@ -173,6 +179,7 @@ export interface ProxyData {
   listenPort?: number;
   vpnSubscription?: string;
   vpnContainerName?: string;
+  vpnStatus?: VpnStatusData;
   maskHost?: string;
   natIp?: string;
   tunnelInterface?: string;
@@ -213,6 +220,7 @@ export interface ProxyData {
 }
 
 export interface ProxyStatsData {
+  vpnStatus?: VpnStatusData;
   id: string;
   containerName: string;
   status: string;
