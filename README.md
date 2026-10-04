@@ -58,7 +58,7 @@
 Одна команда для загрузки и запуска:
 
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/danielVNru/mtproto-panel/master/install.sh)
+bash <(wget -qO- https://raw.githubusercontent.com/GrabovskyAlexey/mtproto-panel/master/install.sh)
 ```
 
 Скрипт автоматически:
@@ -94,6 +94,7 @@ docker compose up -d --build
 | Переменная | Описание |
 |------------|----------|
 | `PORT` | Внешний порт панели |
+| `FRONTEND_PORT` | Порт внутри контейнера: `80` без SSL (по умолчанию), `443` с SSL; установщик задаёт автоматически |
 | `ADMIN_USERNAME` | Логин администратора |
 | `ADMIN_PASSWORD` | Пароль администратора |
 | `JWT_SECRET` | Секрет для JWT токенов |
@@ -102,6 +103,8 @@ docker compose up -d --build
 | `DB_PASSWORD` | Пароль БД |
 
 ## Использование
+
+Панель занимает только выбранный внешний порт: например, при `PORT=89` без SSL используется `89:80`, а с SSL — `89:443`. С SSL установщик создаёт отдельную конфигурацию nginx и подключает сертификаты.
 
 1. Откройте панель: `http://SERVER_IP:PORT`
 2. Войдите с логином и паролем администратора

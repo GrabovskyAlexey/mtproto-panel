@@ -6,7 +6,7 @@ CYAN='\033[0;36m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-REPO_URL="https://github.com/danielVNru/mtproto-panel.git"
+REPO_URL="https://github.com/GrabovskyAlexey/mtproto-panel.git"
 INSTALL_DIR="/opt/mtproto-panel"
 
 echo -e "${CYAN}========================================${NC}"
@@ -101,6 +101,7 @@ fi
 if [ -d "$INSTALL_DIR/.git" ]; then
     echo -e "${CYAN}Обновление из репозитория...${NC}"
     cd "$INSTALL_DIR"
+    git remote set-url origin "$REPO_URL"
     git fetch origin master
     git reset --hard origin/master
 else
@@ -194,8 +195,14 @@ echo -e "  Логин:  ${YELLOW}${ADMIN_USERNAME}${NC}"
 echo ""
 
 # Create .env file
+FRONTEND_PORT=80
+if [ "$SSL_OPTION" = "2" ] || [ "$SSL_OPTION" = "3" ]; then
+    FRONTEND_PORT=443
+fi
+
 cat > .env << EOF
 PORT=${PORT}
+FRONTEND_PORT=${FRONTEND_PORT}
 ADMIN_USERNAME=${ADMIN_USERNAME}
 ADMIN_PASSWORD=${ADMIN_PASSWORD}
 JWT_SECRET=${JWT_SECRET}
@@ -220,9 +227,6 @@ fi
 
 # Setup SSL
 if [ "$SSL_OPTION" = "2" ] || [ "$SSL_OPTION" = "3" ]; then
-    # Use a high internal port so host port 80 is never bound (may be occupied by ISPManager etc.)
-    SSL_HTTP_PORT=18080
-
     # Create nginx SSL config
     cat > nginx-ssl.conf << 'NGINXEOF'
 server {
@@ -325,20 +329,13 @@ NGINXEOF
 
     # Create docker-compose override for SSL
     cat > docker-compose.override.yml << EOF
-version: "3.8"
-
 services:
   frontend:
-    ports:
-      - "${PORT}:443"
     volumes:
       - ./nginx-ssl.conf:/etc/nginx/conf.d/default.conf:ro
       - ${CERT_PATH}:/etc/ssl/certs/fullchain.pem:ro
       - ${KEY_PATH}:/etc/ssl/private/privkey.pem:ro
 EOF
-
-    # Map an unused high port to HTTP inside container — host port 80 is NOT bound
-    sed -i "s/^PORT=.*/PORT=${SSL_HTTP_PORT}/" .env
 fi
 
 # Pull and start
